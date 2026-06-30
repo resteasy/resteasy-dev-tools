@@ -6,17 +6,45 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>46</version>
+        <version>53</version>
         <relativePath />
     </parent>
 
     <groupId>dev.resteasy.tools</groupId>
     <artifactId>resteasy-dev-tools</artifactId>
-    <name>RESTEasy: Development Tools</name>
     <version>4-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>RESTEasy: Development Tools</name>
+    <description>A set of configurations for various Maven plugins.</description>
 
     <url>https://resteasy.dev</url>
+
+    <organization>
+        <name>RESTEasy Community</name>
+        <url>https://resteasy.dev</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>James R. Perkins</name>
+            <email>jperkins@ibm.com</email>
+            <organization>IBM</organization>
+            <organizationUrl>https://ibm.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>resteasy-checkstyle-config</module>
+        <module>ide-config</module>
+    </modules>
 
     <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
         <connection>scm:git:git://github.com/resteasy/resteasy-dev-tools.git</connection>
@@ -25,97 +53,23 @@
         <tag>HEAD</tag>
     </scm>
 
-    <developers>
-        <developer>
-            <name>James R. Perkins</name>
-            <email>jperkins@redhat.com</email>
-            <organization>Red Hat, Inc.</organization>
-            <organizationUrl>https://redhat.com</organizationUrl>
-        </developer>
-    </developers>
-
-    <licenses>
-        <license>
-            <name>Apache License 2.0</name>
-            <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/resteasy/resteasy-dev-tools/issues</url>
+    </issueManagement>
 
     <properties>
-        <version.nexus.staging.maven.plugin>1.7.0</version.nexus.staging.maven.plugin>
-
-        <!-- Currently, this project doesn't compile anything. However, for consistency require a minimum of 17 to
-             build with a release version of 11.
-         -->
-        <jdk.min.version>17</jdk.min.version>
-        <maven.compiler.release>11</maven.compiler.release>
+        <!-- maven-release-plugin configuration -->
+        <autoVersionSubmodules>true</autoVersionSubmodules>
+        <releaseProfiles>central-release</releaseProfiles>
+        <signTag>true</signTag>
+        <tagNameFormat>v@{project.version}</tagNameFormat>
+        <arguments>-DskipTests -DpushChanges=${pushChanges} -Dcentral.autoPublish=${central.autoPublish}</arguments>
+        <!-- Do not push changes by default when using the maven-release-plugin:prepare -->
+        <pushChanges>false</pushChanges>
+        <!-- Use the local directory when using perform -->
+        <localCheckout>true</localCheckout>
+        <!-- Maven Central properties -->
+        <central.deploymentName>resteasy-dev-tools-${project.version}</central.deploymentName>
     </properties>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype-nexus-release</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
-    <modules>
-        <module>resteasy-checkstyle-config</module>
-        <module>ide-config</module>
-        <module>parent-pom</module>
-    </modules>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <localRepoDirectory>${settings.localRepository}</localRepoDirectory>
-                    <pushChanges>false</pushChanges>
-                    <signTag>true</signTag>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${version.nexus.staging.maven.plugin}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <serverId>ossrh</serverId>
-                            <autoReleaseAfterClose>false</autoReleaseAfterClose>
-                            <keepStagingRepositoryOnCloseRuleFailure>true</keepStagingRepositoryOnCloseRuleFailure>
-                            <stagingProgressTimeoutMinutes>60</stagingProgressTimeoutMinutes>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

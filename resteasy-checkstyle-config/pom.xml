@@ -12,4 +12,5 @@
 
     <artifactId>resteasy-checkstyle-config</artifactId>
     <name>RESTEasy: Checkstyle Configuration</name>
+    <description>A default RESTEasy checkstyle configuration</description>
 </project>

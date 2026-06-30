@@ -3,73 +3,55 @@
 <!DOCTYPE module PUBLIC
         "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
-<module name="Checker">
-    <module name="FileTabCharacter">
-        <property name="eachLine" value="true"/>
-    </module>
 
-    <module name="RegexpSingleline">
-        <!-- \s matches whitespace character, $ matches end of line. -->
-        <property name="format" value="\s+$"/>
-        <property name="message" value="Line has trailing spaces."/>
-    </module>
+<!--
+  RESTEasy Checkstyle Configuration - Logic & Code Quality Checks Only
+
+  This configuration focuses on catching logic errors and code smells that cannot
+  be auto-fixed by Spotless/Eclipse formatter. All formatting checks have been
+  removed since Spotless handles them.
+-->
+<module name="Checker">
 
     <module name="TreeWalker">
 
-        <!-- Checks for imports -->
-        <module name="AvoidStarImport">
-            <property name="allowStaticMemberImports" value="true"/>
-        </module>
-        <module name="RedundantImport"/>
+        <!-- Code Quality: Catch common logic errors -->
+        <module name="EmptyStatement"/>                <!-- Catches accidental ;; -->
+        <module name="EqualsHashCode"/>                <!-- If you override equals(), must override hashCode() -->
+        <module name="IllegalInstantiation"/>          <!-- Don't use 'new' with certain classes -->
+        <module name="CovariantEquals"/>               <!-- equals(SameType) should use equals(Object) -->
 
-        <module name="UnusedImports">
-            <property name="processJavadoc" value="true"/>
-        </module>
+        <!-- Code Quality: Enforce long literal style -->
+        <module name="UpperEll"/>                      <!-- Use 10L not 10l -->
 
-        <!-- Modifier Checks -->
-        <module name="ModifierOrder"/>
-        <module name="RedundantModifier"/>
-
-        <!-- Checks for blocks -->
-        <!-- <module name="LeftCurly">
-            <property name="option" value="eol"/>
-            <property name="tokens" value="CLASS_DEF,CTOR_DEF,INTERFACE_DEF,METHOD_DEF,LITERAL_SWITCH,STATIC_INIT"/>
-        </module> -->
-
-        <!-- Checks for common coding problems -->
-        <module name="EmptyStatement"/>
-        <module name="EqualsHashCode"/>
-        <module name="IllegalInstantiation"/>
-
-        <!-- final parameters check, enabled only for constructors -->
-        <module name="FinalParameters">
-            <property name="tokens" value="CTOR_DEF"/>
-        </module>
-
-        <!-- Miscellaneous other checks -->
-        <module name="UpperEll"/>
-        <module name="PackageAnnotation"/>
-        <module name="CovariantEquals"/>
-        <module name="ArrayTypeStyle"/>
-        <!-- <module name="Indentation"/> -->
-
-        <!-- Checks for System.out -->
+        <!-- Code Smells: Things that shouldn't be in production code -->
         <module name="RegexpSinglelineJava">
             <property name="format" value="System\.out"/>
             <property name="ignoreComments" value="true"/>
+            <property name="message" value="Don't use System.out - use a logger"/>
         </module>
 
         <module name="RegexpSinglelineJava">
             <property name="format" value="System\.err"/>
             <property name="ignoreComments" value="true"/>
+            <property name="message" value="Don't use System.err - use a logger"/>
         </module>
 
-        <!-- Checks for printStackTrace -->
         <module name="RegexpSinglelineJava">
-            <property name="format" value="printStackTrace\(\)"/>
+            <property name="format" value="\.printStackTrace\(\)"/>
             <property name="ignoreComments" value="true"/>
+            <property name="message" value="Don't use printStackTrace() - use a logger"/>
         </module>
 
+        <!-- Modifier Issues -->
+        <module name="RedundantModifier"/>             <!-- Remove redundant public/abstract/etc -->
+
+        <!-- Constructor parameter should be final (prevents accidental reassignment) -->
+        <module name="FinalParameters">
+            <property name="tokens" value="CTOR_DEF"/>
+        </module>
+
+        <!-- Allow inline suppressions via comments -->
         <module name="SuppressionCommentFilter">
             <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
             <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)"/>
@@ -78,6 +60,7 @@
 
     </module>
 
+    <!-- Suppressions file for exceptions -->
     <module name="SuppressionFilter">
         <property name="file" value="/resteasy-checkstyle/suppressions.xml"/>
     </module>
