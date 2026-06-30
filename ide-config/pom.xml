@@ -29,7 +29,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>ide-config</artifactId>
-    <name>RESTEasy MicroProfile IDE Configuration</name>
+    <name>RESTEasy: IDE Configuration</name>
+    <description>RESTEasy IDE configuration files for auto-formatting plugins</description>
     <packaging>jar</packaging>
 
 </project>
