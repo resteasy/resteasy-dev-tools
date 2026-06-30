@@ -1,7 +1,6 @@
 = RESTEasy Development Tools
 
-This project simply contains a parent POM, which is an extension of the `org.jboss:jboss-parent`, a checkstyle
-configuration file and some IDE configuration files.
+This project simply contains a checkstyle configuration file and some IDE configuration files.
 
 == Releasing
 

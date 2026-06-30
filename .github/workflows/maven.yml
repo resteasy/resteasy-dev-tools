@@ -11,7 +11,6 @@ on:
       - '.github/workflows/maven.yml'
       - '**/pom.xml'
       - 'ide-config/**'
-      - 'parent-pom/**'
       - 'resteasy-checkstyle-config/**'
   pull_request:
     branches:
@@ -20,7 +19,6 @@ on:
       - '.github/workflows/maven.yml'
       - '**/pom.xml'
       - 'ide-config/**'
-      - 'parent-pom/**'
       - 'resteasy-checkstyle-config/**'
 
 # Only run the latest job
@@ -34,75 +32,13 @@ jobs:
 
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v4
-        with:
-          path: resteasy-dev-tools
+        uses: actions/checkout@v7
       - name: Set up JDKs
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          java-version: |
-            11
-            17
-            21
+          java-version: 25
           distribution: 'temurin'
-          architecture: x64
           cache: 'maven'
 
-      - name: Install the snapshot
-        run: |
-          cd resteasy-dev-tools
-          mvn -B -ntp install
-
-      - name: Check out RESTEasy Guice
-        uses: actions/checkout@v4
-        with:
-          repository: resteasy/resteasy-guice
-          path: resteasy-guice
-      - name: Test RESTEasy Guice with updated parent
-        run: |
-          cd resteasy-guice
-          mvn -B -ntp versions:update-parent -DallowSnapshots=true -N
-          git diff pom.xml
-          mvn -B -ntp install -Djava11.home=${{env.JAVA_HOME_11_X64}} -Djava17.home=${{env.JAVA_HOME_17_X64}}
-
-      - name: Check out RESTEasy MicroProfile
-        uses: actions/checkout@v4
-        with:
-          repository: resteasy/resteasy-microprofile
-          path: resteasy-microprofile
-      - name: Test RESTEasy MicroProfile with updated parent
-        run: |
-          cd resteasy-microprofile
-          mvn -B -ntp versions:update-parent -DallowSnapshots=true -N
-          git diff pom.xml
-          mvn -B -ntp install -Djava11.home=${{env.JAVA_HOME_11_X64}} -Djava17.home=${{env.JAVA_HOME_17_X64}}
-
-      - name: Check out RESTEasy
-        uses: actions/checkout@v4
-        with:
-          repository: resteasy/resteasy
-          path: resteasy
-      - name: Test RESTEasy with updated parent
-        run: |
-          cd resteasy/resteasy-bom
-          mvn -B -ntp versions:update-parent -DallowSnapshots=true -N
-          mvn clean install
-          cd ../resteasy-dependencies-bom
-          mvn -B -ntp versions:update-parent -DallowSnapshots=true -N
-          mvn clean install
-          cd ..
-          mvn -B -ntp versions:update-parent -DallowSnapshots=true -N
-          git diff pom.xml
-          mvn -B -ntp install -Djava11.home=${{env.JAVA_HOME_11_X64}} -Djava17.home=${{env.JAVA_HOME_17_X64}}
-
-      - name: Check out RESTEasy RxJava
-        uses: actions/checkout@v4
-        with:
-          repository: resteasy/resteasy-rxjava
-          path: resteasy-rxjava
-      - name: Test RESTEasy RxJava with updated parent
-        run: |
-          cd resteasy-rxjava
-          mvn -B -ntp versions:update-parent -DallowSnapshots=true -N
-          git diff pom.xml
-          mvn -B -ntp install -Djava11.home=${{env.JAVA_HOME_11_X64}} -Djava17.home=${{env.JAVA_HOME_17_X64}}
+      - name: Build Project
+        run: mvn -B -ntp install
