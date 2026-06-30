@@ -41,4 +41,4 @@ jobs:
           cache: 'maven'
 
       - name: Build Project
-        run: mvn -B -ntp install
+        run: ./mvnw -B -ntp install
